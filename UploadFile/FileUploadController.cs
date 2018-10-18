@@ -26,8 +26,8 @@ namespace UploadFile
                 {
                     var httpPostedFile = HttpContext.Current.Request?.Files[0];
                     ScanResult fileResult=new ScanResult();
-                    var fileSavePath = HostingEnvironment.MapPath("~/UploadedFiles");
-                    var destinationFolder = "C:\\DestinationFolder\\";
+                    var fileSavePath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\UploadedFiles\\";
+                    var destinationFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + "\\DestinationFiles\\";
 
                     if (httpPostedFile != null)
                     {
@@ -73,6 +73,9 @@ namespace UploadFile
                     {
                         return new KeyValuePair<bool, string>(false, "There is no file to upload.");
                     }
+
+
+                    return new KeyValuePair<bool, string>(true, "Uploaded File");
                 }
 
                 return new KeyValuePair<bool, string>(false, "No file found to upload.");
@@ -98,6 +101,9 @@ namespace UploadFile
         {
             try
             {
+                if (!Directory.Exists(fileSavePath))
+                    Directory.CreateDirectory(fileSavePath);
+
                 if (fileSavePath != null && !string.IsNullOrEmpty(fileName))
                 {
                     httpPostedFile.SaveAs(fileSavePath + "\\" + fileName);
